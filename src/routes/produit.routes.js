@@ -7,6 +7,8 @@ router.get('/', produitController.findAll);
 router.post('/', produitController.create);
 // Retrieve a single produit with id
 router.get('/:id', produitController.findById);
+// Retrieve a list of product with categorie
+router.get('/byCatg/:id', produitController.findByCategorie);
 // Update a produit with id
 router.put('/:id', produitController.update);
 // Delete a produit with id
