@@ -3,7 +3,7 @@ var dbConn = require('./../../config/db.config');
 //produits object create
 // display add produit page  (`nom`,`reference`,`categorie`,`prix`,`disponibilite`,`description`
 
-var Produit = (produit) => {
+var Produit = function(produit) {
   this.nom = produit.nom;
   this.reference = produit.reference;
   this.categorie = produit.categorie;

@@ -10,6 +10,7 @@ exports.findAll = function (req, res) {
   });
 };
 exports.create = function (req, res) {
+  console.log(req.body);
   const new_produit = new Produit(req.body);
   //handles null error
   if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
