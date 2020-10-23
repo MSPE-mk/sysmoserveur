@@ -1,5 +1,7 @@
 'use strict';
 const Produit = require('../models/produit.model');
+const ProductImage = require('../models/productImage');
+
 var path = require('path'),
   __parentDir = path.basename(path.dirname('server.js'));
 exports.findAll = function (req, res) {
@@ -67,20 +69,18 @@ exports.upload = function (req, res) {
   // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
   let sampleFile = req.files.image;
   console.log(req.files.image.name);
-  let newImage = new ProductImage(idProduct,req.files.image.name)
+  let newImage = new ProductImage(idProduct, req.files.image.name)
   // Use the mv() method to place the file somewhere on your server
   sampleFile.mv(__parentDir + '/uploads/climatiseurs/' + req.files.image.name, function (err) {
-    if (err)
-      {return res.status(500).send({ message: 'Could not upload the file', error: err });}
-      else{
-        Produit.saveImgInDB(newImage, function (err, produit) {
-          if (err)
-            res.send(err);
-          res.json({ error: false, message: "product picture added successfully!", data: produit });
-        });
-        res.status(200).send({ message: 'Uploaded the file successfully: ' + req.files.image.name });
-      }
-    
+    if (err) { return res.status(500).send({ message: 'Could not upload the file', error: err }); }
+    else {
+      ProductImage.saveImgInDB(newImage, function (err, result) {
+        if (err)
+          console.log(err);
+        console.log('picture added successfully' + result);
+      });
+      res.status(200).send({ message: 'Uploaded the file successfully: ' + req.files.image.name });
+    }
   });
 
 }

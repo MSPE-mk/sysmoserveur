@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.json())
 // define a root route
 app.get('/', (req, res) => {
-  res.send("Hello World");
+  res.send("Sysmo API is running");
 });
 // Require produit routes
 const produitRoutes = require('./src/routes/produit.routes')
