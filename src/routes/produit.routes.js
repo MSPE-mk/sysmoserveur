@@ -1,3 +1,5 @@
+var path = require('path'),
+    __parentDir = path.dirname(module.parent.filename);
 const express = require('express')
 const router = express.Router()
 const produitController =   require('../controllers/produit.controller');
@@ -13,4 +15,7 @@ router.get('/byCatg/:id', produitController.findByCategorie);
 router.put('/:id', produitController.update);
 // Delete a produit with id
 router.delete('/:id', produitController.delete);
+// Upload Images
+router.post('/upload', produitController.upload);
+    
 module.exports = router

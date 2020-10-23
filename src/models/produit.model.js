@@ -14,7 +14,12 @@ var Produit = function(produit) {
   this.updated_at = new Date();
 };
 
-Produit.create = (newProd, result) => {
+var ProductImage = function(id,imageName){
+  this.id_product = id;
+  this.image_name = imageName
+}
+
+exports.Produit.create = (newProd, result) => {
   dbConn.query("INSERT INTO produits set ?", newProd, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -27,7 +32,7 @@ Produit.create = (newProd, result) => {
   });
 };
 
-Produit.findById = (id, result) => {
+exports.Produit.findById = (id, result) => {
   dbConn.query("Select * from produits where id = ? ", id, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -39,7 +44,7 @@ Produit.findById = (id, result) => {
   });
 };
 
-Produit.findByCategorie = (id, result) => {
+exports.Produit.findByCategorie = (id, result) => {
   dbConn.query("Select * from produits where categorie = ? ", id, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -52,21 +57,21 @@ Produit.findByCategorie = (id, result) => {
   });
 };
 
-Produit.findAll = (result) => {
+exports.Produit.findAll = (result) => {
   dbConn.query("Select * from produits", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
     }
     else {
-      console.log('produits : ', res);
+      //console.log('produits : ', res);
       result(null, res);
     }
   });
 };
 // display add produit page  (`nom`,`reference`,`categorie`,`prix`,`disponibilite`,`description`
 
-Produit.update = (id, produit, result) => {
+exports.Produit.update = (id, produit, result) => {
   dbConn.query("UPDATE produits SET nom=?,reference=?,categorie=?,prix=?,disponibilite=?,description=? WHERE id = ?", [produit.nom, produit.reference, produit.categorie, produit.prix, produit.disponibilite, produit.description, id], function (err, res) {
     if (err) {
       console.log("error: ", err);
@@ -77,7 +82,7 @@ Produit.update = (id, produit, result) => {
   });
 };
 
-Produit.delete = (id, result) => {
+exports.Produit.delete = (id, result) => {
   dbConn.query("DELETE FROM produits WHERE id = ?", [id], (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -88,4 +93,16 @@ Produit.delete = (id, result) => {
     }
   });
 };
-module.exports = Produit;
+
+exports.Produit.saveImgInDB= (newImgProduct,result)=>{
+  dbConn.query("INSERT INTO image_product set ?", newImgProduct, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+    }
+    else {
+      console.log(res.insertId);
+      result(null, res.insertId);
+    }
+  });
+}

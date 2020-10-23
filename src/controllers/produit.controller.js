@@ -1,16 +1,17 @@
 'use strict';
 const Produit = require('../models/produit.model');
+var path = require('path'),
+  __parentDir = path.basename(path.dirname('server.js'));
 exports.findAll = function (req, res) {
   Produit.findAll(function (err, produit) {
-    console.log('controller')
+    console.log('all Product founded')
     if (err)
       res.send(err);
-    console.log('res', produit);
+    //console.log('res', produit);
     res.send(produit);
   });
 };
 exports.create = function (req, res) {
-  console.log(req.body);
   const new_produit = new Produit(req.body);
   //handles null error
   if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
@@ -56,3 +57,30 @@ exports.delete = function (req, res) {
     res.json({ error: false, message: 'produit successfully deleted' });
   });
 };
+
+exports.upload = function (req, res) {
+  console.log(req.body.data);
+  let idProduct = req.body.data;
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send({ message: 'Please upload a file!!' });
+  }
+  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+  let sampleFile = req.files.image;
+  console.log(req.files.image.name);
+  let newImage = new ProductImage(idProduct,req.files.image.name)
+  // Use the mv() method to place the file somewhere on your server
+  sampleFile.mv(__parentDir + '/uploads/climatiseurs/' + req.files.image.name, function (err) {
+    if (err)
+      {return res.status(500).send({ message: 'Could not upload the file', error: err });}
+      else{
+        Produit.saveImgInDB(newImage, function (err, produit) {
+          if (err)
+            res.send(err);
+          res.json({ error: false, message: "product picture added successfully!", data: produit });
+        });
+        res.status(200).send({ message: 'Uploaded the file successfully: ' + req.files.image.name });
+      }
+    
+  });
+
+}
