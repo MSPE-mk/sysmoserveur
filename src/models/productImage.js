@@ -12,7 +12,6 @@ ProductImage.saveImgInDB = (newImgProduct, result) => {
             result(err, null);
         }
         else {
-            console.log(res.insertId);
             result(null, res.insertId);
         }
     });

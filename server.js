@@ -3,11 +3,13 @@ const fileUpload = require('express-fileupload');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-
 // create express app
 const app = express();
 // use Upload Module
 app.use(fileUpload());
+//set all Uploads sub Directorie accessible 
+app.use(express.static(__dirname + '/uploads/climatiseurs'));
+app.use(express.static(__dirname + '/uploads/compresseurs'));
 // Access-Control-Allow-Origin
 app.use(cors());
 // Setup server port
