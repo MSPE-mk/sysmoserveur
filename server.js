@@ -8,8 +8,8 @@ const app = express();
 // use Upload Module
 app.use(fileUpload());
 //set all Uploads sub Directorie accessible 
-app.use(express.static(__dirname + '/uploads/climatiseurs'));
-app.use(express.static(__dirname + '/uploads/compresseurs'));
+app.use(express.static(__dirname + '/uploads/climatiseur'));
+app.use(express.static(__dirname + '/uploads/compresseur'));
 // Access-Control-Allow-Origin
 app.use(cors());
 // Setup server port

@@ -16,11 +16,19 @@ exports.findAll = function (req, res) {
 };
 // find Product by ID
 exports.findById = function (req, res) {
+
   Produit.findById(req.params.id, function (err, produit) {
-    if (err)
+    if (err) {
       res.send(err);
-    res.json(produit);
+    } else {
+      ProductImage.getPictureByID(req.params.id, function (err, pictures) {
+        if (err)
+          res.send(err)
+          res.status(200).json({msg:'all data of product '+req.params.id +' was founded ',productInfo:produit , productPictureList:pictures});
+      })
+    }
   });
+
 };
 // Find Product by Categorie
 exports.findByCategorie = function (req, res) {
