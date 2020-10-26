@@ -10,8 +10,9 @@ var Produit = function(produit) {
   this.prix = produit.prix;
   this.disponibilite = produit.disponibilite;
   this.description = produit.description;
-  this.created_at = new Date();
-  this.updated_at = new Date();
+  this.created_at = produit.created_at;
+  this.updated_at = produit.updated_at;
+  this.product_first_img = produit.firstPicture;
 };
 
 

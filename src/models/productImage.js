@@ -27,4 +27,16 @@ ProductImage.saveImgInDB = (newImgProduct, result) => {
         }
     });
 }
+
+ProductImage.deleteProductPictures = (idProduct, result) => {
+    dbConn.query("DELETE FROM image_product WHERE id_product = ?", [idProduct], (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+      }
+      else {
+        result(null, res);
+      }
+    });
+  };
 module.exports = ProductImage;
