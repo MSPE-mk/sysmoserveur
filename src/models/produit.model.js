@@ -3,7 +3,8 @@ var dbConn = require('./../../config/db.config');
 //produits object create
 // display add produit page  (`nom`,`reference`,`categorie`,`prix`,`disponibilite`,`description`
 
-var Produit = function(produit) {
+var Produit = function (produit) {
+  this.id = produit.id;
   this.nom = produit.nom;
   this.reference = produit.reference;
   this.categorie = produit.categorie;
@@ -15,8 +16,16 @@ var Produit = function(produit) {
   this.product_first_img = produit.firstPicture;
 };
 
-
-
+Produit.getLastId = (callback) =>{
+  dbConn.query("SELECT MAX(id) FROM produits",(err,res)=>{
+    if(err){
+      console.log('cannot get the last id ');
+      return 0
+    }else{
+      return callback(res[0]['MAX(id)']+1) ;
+    }
+  })
+}
 Produit.create = (newProd, result) => {
   dbConn.query("INSERT INTO produits set ?", newProd, (err, res) => {
     if (err) {
@@ -24,8 +33,8 @@ Produit.create = (newProd, result) => {
       result(err, null);
     }
     else {
-      console.log(res.insertId);
-      result(null, res.insertId);
+      console.log(newProd.id);
+      result(null, newProd.id);
     }
   });
 };
@@ -50,7 +59,6 @@ Produit.findByCategorie = (id, result) => {
     }
     else {
       result(null, res);
-      console.log('Find product by categorie' + res);
     }
   });
 };
@@ -68,9 +76,9 @@ Produit.findAll = (result) => {
   });
 };
 // display add produit page  (`nom`,`reference`,`categorie`,`prix`,`disponibilite`,`description`
-
 Produit.update = (id, produit, result) => {
-  dbConn.query("UPDATE produits SET nom=?,reference=?,categorie=?,prix=?,disponibilite=?,description=? WHERE id = ?", [produit.nom, produit.reference, produit.categorie, produit.prix, produit.disponibilite, produit.description, id], function (err, res) {
+  console.log(id);
+  dbConn.query("UPDATE `sysmodb`.`produits` SET `nom` = '"+produit.nom+"', `reference` = '"+produit.reference+"', `categorie` = '"+produit.categorie+"', `prix` = '"+produit.prix+"', `disponibilite` = '"+produit.disponibilite+"', `description` = ?, `created_at` = '"+produit.created_at+"', `updated_at` = '"+produit.updated_at+"', `product_first_img` = '"+produit.product_first_img+"' WHERE (`id` = "+id+");",[produit.description], function (err, res) {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -91,6 +99,5 @@ Produit.delete = (id, result) => {
     }
   });
 };
-
 
 module.exports = Produit;
