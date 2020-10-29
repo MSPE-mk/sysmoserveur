@@ -51,7 +51,6 @@ exports.update = function (req, res) {
     updated_at: req.body.updatedAt,
     firstPicture: req.body.firstPicture
   };
-  console.log(produit);
 
   if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
     res.status(400).send({ error: true, message: 'Please provide all required field' });
@@ -66,9 +65,6 @@ exports.update = function (req, res) {
           console.log('All pictures was removed successfully');
         })
         // upload Product Pictures when Product iformation has been saved Successfully 
-        console.log(Object.keys(req.files).length);
-        
-        let isUploadNotFailed = true;
         for(let i = 0;i < Object.keys(req.files).length;i++) {
           let path = '/uploads/' + req.body.catProduct + '/';
           let newImage = new ProductImage(req.params.id, req.files[i]['name'])
@@ -131,7 +127,6 @@ exports.createProd = function (req, res) {
     if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
       res.status(400).send({ error: true, message: 'Please provide all required field' });
     } else {
-
       // Save Product in data base
       Produit.create(new_produit, function (err, result) {
         if (err) {
@@ -139,7 +134,6 @@ exports.createProd = function (req, res) {
           res.send(err);
         } else {
           // upload Product Pictures when Product iformation has been saved Successfully 
-          console.log(Object.keys(req.files).length);
           for (let i = 0; i < Object.keys(req.files).length; i++) {
             let path = '/uploads/' + produit.categorie + '/';
             let newImage = new ProductImage(result, req.files[i].name)

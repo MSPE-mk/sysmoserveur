@@ -33,7 +33,7 @@ Produit.create = (newProd, result) => {
       result(err, null);
     }
     else {
-      console.log(newProd.id);
+      //console.log(newProd.id);
       result(null, newProd.id);
     }
   });
