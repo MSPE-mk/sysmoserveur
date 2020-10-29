@@ -11,9 +11,10 @@ var Produit = function (produit) {
   this.prix = produit.prix;
   this.disponibilite = produit.disponibilite;
   this.description = produit.description;
+  this.product_first_img = produit.firstPicture;
   this.created_at = produit.created_at;
   this.updated_at = produit.updated_at;
-  this.product_first_img = produit.firstPicture;
+  this.featured_product = produit.featured_product;
 };
 
 Produit.getLastId = (callback) =>{
