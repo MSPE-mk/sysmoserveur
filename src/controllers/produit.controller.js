@@ -36,6 +36,14 @@ exports.findByCategorie = function (req, res) {
     res.json(produits);
   });
 };
+// Find featured Products
+exports.featuredProd = function (req, res) {
+  Produit.findFeaturedProduct(req.params.id,function (err, result) {
+    if (err)
+      res.send(err);
+    res.json(result);
+  })
+}
 // Edit Product
 exports.update = function (req, res) {
   // Create Product objet from requested information
@@ -49,9 +57,11 @@ exports.update = function (req, res) {
     description: req.body.descriptionProduct,
     created_at: req.body.createdAt,
     updated_at: req.body.updatedAt,
-    firstPicture: req.body.firstPicture
+    firstPicture: req.body.firstPicture,
+    featured_product: req.body.isfeaturedProd 
   };
 
+  console.log(produit);
   if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
     res.status(400).send({ error: true, message: 'Please provide all required field' });
   } else {
@@ -65,11 +75,11 @@ exports.update = function (req, res) {
           console.log('All pictures was removed successfully');
         })
         // upload Product Pictures when Product iformation has been saved Successfully 
-        for(let i = 0;i < Object.keys(req.files).length;i++) {
+        for (let i = 0; i < Object.keys(req.files).length; i++) {
           let path = '/uploads/' + req.body.catProduct + '/';
           let newImage = new ProductImage(req.params.id, req.files[i]['name'])
           // Use the mv() method to place the file somewhere on your server
-          isUploadNotFailed = req.files[i].mv(__parentDir + path + req.files[i].name, function (err) {
+          req.files[i].mv(__parentDir + path + req.files[i].name, function (err) {
             if (err) {
               console.log('connot upload pictures' + err);
               res.status(500).json({ message: 'Could not upload the file', error: err });
@@ -84,7 +94,7 @@ exports.update = function (req, res) {
               });
             }
           });
-        } 
+        }
         res.status(200).json({ error: false, message: 'Product with ID ' + req.params.id + ' has been updated' });
       }
     });
@@ -117,10 +127,12 @@ exports.createProd = function (req, res) {
       prix: req.body.priceProduct,
       disponibilite: req.body.disponibiliteProduct,
       description: req.body.descriptionProduct,
-      created_at: new Date(),
-      updated_at: new Date(),
-      firstPicture: req.body.firstPicture
+      created_at: req.body.createdAt,
+      updated_at: req.body.updatedAt,
+      firstPicture: req.body.firstPicture,
+      featured_product: req.body.isfeaturedProd
     };
+    
     // create a new Product to save in dataBase
     const new_produit = new Produit(produit);
     //handles null error

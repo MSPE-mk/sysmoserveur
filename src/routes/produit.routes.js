@@ -11,6 +11,8 @@ router.post('/', produitController.createProd);
 router.get('/:id', produitController.findById);
 // Retrieve a list of product with categorie
 router.get('/byCatg/:id', produitController.findByCategorie);
+// Retrieve all Featured Poroduct 
+router.get('/featuredProduct/:id',produitController.featuredProd);
 // Update a produit with id
 router.put('/:id', produitController.update);
 // Delete a produit with id
