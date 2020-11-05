@@ -17,13 +17,13 @@ var Produit = function (produit) {
   this.featured_product = produit.featured_product;
 };
 
-Produit.getLastId = (callback) =>{
-  dbConn.query("SELECT MAX(id) FROM produits",(err,res)=>{
-    if(err){
+Produit.getLastId = (callback) => {
+  dbConn.query("SELECT MAX(id) FROM produits", (err, res) => {
+    if (err) {
       console.log('cannot get the last id ');
       return 0
-    }else{
-      return callback(res[0]['MAX(id)']+1) ;
+    } else {
+      return callback(res[0]['MAX(id)'] + 1);
     }
   })
 }
@@ -64,13 +64,13 @@ Produit.findByCategorie = (id, result) => {
   });
 };
 
-Produit.findFeaturedProduct = (id,result)=> {
-  dbConn.query ("SELECT * FROM produits where featured_product = 'true';" ,(err,res)=>{
+Produit.findFeaturedProduct = (id, result) => {
+  dbConn.query("SELECT * FROM produits where featured_product = 1;", (err, res) => {
     if (err) {
-      console.log("error" , err);
+      console.log("error", err);
       result(err, null);
-    }else {
-      result(null,res);
+    } else {
+      result(null, res);
     }
   })
 }
@@ -90,7 +90,8 @@ Produit.findAll = (result) => {
 // display add produit page  (`nom`,`reference`,`categorie`,`prix`,`disponibilite`,`description`
 Produit.update = (id, produit, result) => {
   console.log(id);
-  dbConn.query("UPDATE `sysmodb`.`produits` SET `nom` = '"+produit.nom+"', `reference` = '"+produit.reference+"', `categorie` = '"+produit.categorie+"', `prix` = '"+produit.prix+"', `disponibilite` = '"+produit.disponibilite+"', `description` = ?, `created_at` = '"+produit.created_at+"', `updated_at` = '"+produit.updated_at+"', `product_first_img` = '"+produit.product_first_img+"', `featured_product` = ? WHERE (`id` = "+id+");",[produit.description,produit.featured_product], function (err, res) {
+  console.log(produit);
+  dbConn.query("UPDATE produits SET ? WHERE id = ?;", [produit, id], function (err, res) {
     if (err) {
       console.log("error: ", err);
       result(null, err);

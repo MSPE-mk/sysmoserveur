@@ -4,12 +4,14 @@ const express = require('express')
 const router = express.Router()
 const authentication = require('../controllers/authentification');
 const produitController =   require('../controllers/produit.controller');
-// Retrieve all produit
+// Retrieve all product
 router.get('/', produitController.findAll);
-// Create a new produit
+// Create a new product
 router.post('/', produitController.createProd);
-// Retrieve a single produit with id
+// Retrieve a single product with id
 router.get('/:id', produitController.findById);
+// Retrieve pictures list of product
+router.get('/pictures/:id',produitController.getPicture)
 // Retrieve a list of product with categorie
 router.get('/byCatg/:id', produitController.findByCategorie);
 // Retrieve all Featured Poroduct 
@@ -18,6 +20,8 @@ router.get('/featuredProduct/:id',produitController.featuredProd);
 router.put('/:id', produitController.update);
 // Delete a produit with id
 router.delete('/:id', produitController.delete);
+// Delete a picture whith id 
+router.delete('/picture/:id',produitController.deletePicture);
 // autentification
 router.post('/login',authentication.login);
 // Get user By Id

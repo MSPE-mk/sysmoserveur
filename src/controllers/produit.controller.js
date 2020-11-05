@@ -14,6 +14,14 @@ exports.findAll = function (req, res) {
     res.send(produit);
   });
 };
+// Get all picture of product
+exports.getPicture = function (req, res) {
+  ProductImage.getPictureByID(req.params.id, function (err, pictures) {
+    if (err)
+      res.send(err)
+    res.status(200).json({ msg: 'all Pictures of Product ' + req.params.id + ' was founded ', productPictureList: pictures });
+  })
+}
 // find Product by ID
 exports.findById = function (req, res) {
   Produit.findById(req.params.id, function (err, produit) {
@@ -38,7 +46,7 @@ exports.findByCategorie = function (req, res) {
 };
 // Find featured Products
 exports.featuredProd = function (req, res) {
-  Produit.findFeaturedProduct(req.params.id,function (err, result) {
+  Produit.findFeaturedProduct(req.params.id, function (err, result) {
     if (err)
       res.send(err);
     res.json(result);
@@ -47,58 +55,54 @@ exports.featuredProd = function (req, res) {
 // Edit Product
 exports.update = function (req, res) {
   // Create Product objet from requested information
-  let produit = {
-    id: 0,
-    nom: req.body.nameProduct,
-    reference: req.body.refProduct,
-    categorie: req.body.catProduct,
-    prix: req.body.priceProduct,
-    disponibilite: req.body.disponibiliteProduct,
-    description: req.body.descriptionProduct,
-    created_at: req.body.createdAt,
-    updated_at: req.body.updatedAt,
-    firstPicture: req.body.firstPicture,
-    featured_product: req.body.isfeaturedProd 
-  };
+  let product = new Produit(req.body);
+  console.log(product);
+  Produit.update(req.params.id, product, function (err, produit) {
+    if (err) {
+      res.status(400).send({ error: true, message: err });
+    } else {
+      res.status(200).json({ error: false, message: 'Product with ID ' + req.params.id + ' has been updated' });
+    }
+  });
 
-  console.log(produit);
-  if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
-    res.status(400).send({ error: true, message: 'Please provide all required field' });
-  } else {
-    Produit.update(req.params.id, new Produit(produit), function (err, produit) {
-      if (err) {
-        res.status(400).send({ error: true, message: err });
-      } else {
-        ProductImage.deleteProductPictures(req.params.id, (err, result) => {
-          if (err)
-            console.log(err);
-          console.log('All pictures was removed successfully');
-        })
-        // upload Product Pictures when Product iformation has been saved Successfully 
-        for (let i = 0; i < Object.keys(req.files).length; i++) {
-          let path = '/uploads/' + req.body.catProduct + '/';
-          let newImage = new ProductImage(req.params.id, req.files[i]['name'])
-          // Use the mv() method to place the file somewhere on your server
-          req.files[i].mv(__parentDir + path + req.files[i].name, function (err) {
-            if (err) {
-              console.log('connot upload pictures' + err);
-              res.status(500).json({ message: 'Could not upload the file', error: err });
-            } else {
-              // save Product Pictures in data base
-              ProductImage.saveImgInDB(newImage, function (err, res) {
-                if (err) {
-                  console.log(err);
-                } else {
-                  console.log('picture added successfully  ' + res);
-                }
-              });
-            }
-          });
-        }
-        res.status(200).json({ error: false, message: 'Product with ID ' + req.params.id + ' has been updated' });
-      }
-    });
-  }
+  // console.log(produit);
+  // if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
+  //   res.status(400).send({ error: true, message: 'Please provide all required field' });
+  // } else {
+  //   Produit.update(req.params.id, new Produit(produit), function (err, produit) {
+  //     if (err) {
+  //       res.status(400).send({ error: true, message: err });
+  //     } else {
+  //       ProductImage.deleteProductPictures(req.params.id, (err, result) => {
+  //         if (err)
+  //           console.log(err);
+  //         console.log('All pictures was removed successfully');
+  //       })
+  //       // upload Product Pictures when Product iformation has been saved Successfully 
+  //       for (let i = 0; i < Object.keys(req.files).length; i++) {
+  //         let path = '/uploads/' + req.body.catProduct + '/';
+  //         let newImage = new ProductImage(req.params.id, req.files[i]['name'])
+  //         // Use the mv() method to place the file somewhere on your server
+  //         req.files[i].mv(__parentDir + path + req.files[i].name, function (err) {
+  //           if (err) {
+  //             console.log('connot upload pictures' + err);
+  //             res.status(500).json({ message: 'Could not upload the file', error: err });
+  //           } else {
+  //             // save Product Pictures in data base
+  //             ProductImage.saveImgInDB(newImage, function (err, res) {
+  //               if (err) {
+  //                 console.log(err);
+  //               } else {
+  //                 console.log('picture added successfully  ' + res);
+  //               }
+  //             });
+  //           }
+  //         });
+  //       }
+  //       res.status(200).json({ error: false, message: 'Product with ID ' + req.params.id + ' has been updated' });
+  //     }
+  //   });
+  // }
 };
 // Delete Product
 exports.delete = function (req, res) {
@@ -115,6 +119,14 @@ exports.delete = function (req, res) {
     }
   });
 };
+// Delete Picture 
+exports.deletePicture = function (req, res) {
+  ProductImage.deleteProductPictures(req.params.id, (err, result) => {
+    if (err)
+      console.log(err);
+    res.status(200).send({ msg: 'picture removed' });
+  })
+}
 // Create a new Product && Upload Pictures
 exports.createProd = function (req, res) {
   // Create Product objet from requested information
@@ -132,7 +144,7 @@ exports.createProd = function (req, res) {
       firstPicture: req.body.firstPicture,
       featured_product: req.body.isfeaturedProd
     };
-    
+
     // create a new Product to save in dataBase
     const new_produit = new Produit(produit);
     //handles null error

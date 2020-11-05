@@ -6,7 +6,7 @@ var ProductImage = function (id, imageName) {
 }
 
 ProductImage.getPictureByID = (idProduct, result) => {
-    dbConn.query("Select image_name from image_product where id_product = ? ", idProduct, (err, res) => {
+    dbConn.query("Select * from image_product where id_product = ? ", idProduct, (err, res) => {
         if (err) {
           console.log("error: ", err);
           result(err, null);
@@ -28,8 +28,8 @@ ProductImage.saveImgInDB = (newImgProduct, result) => {
     });
 }
 
-ProductImage.deleteProductPictures = (idProduct, result) => {
-    dbConn.query("DELETE FROM image_product WHERE id_product = ?", [idProduct], (err, res) => {
+ProductImage.deleteProductPictures = (id, result) => {
+    dbConn.query("DELETE FROM image_product WHERE id = ?", [id], (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(null, err);

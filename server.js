@@ -10,6 +10,9 @@ app.use(fileUpload());
 //set all Uploads sub Directorie accessible 
 app.use(express.static(__dirname + '/uploads/climatiseur'));
 app.use(express.static(__dirname + '/uploads/compresseur'));
+app.use(express.static(__dirname + '/uploads/accessoire'));
+app.use(express.static(__dirname + '/uploads/evaporateur'));
+app.use(express.static(__dirname + '/uploads/condenseur'));
 // Access-Control-Allow-Origin
 app.use(cors());
 // Setup server port
