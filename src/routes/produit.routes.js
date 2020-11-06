@@ -10,8 +10,6 @@ router.get('/', produitController.findAll);
 router.post('/', produitController.createProd);
 // Retrieve a single product with id
 router.get('/:id', produitController.findById);
-// Retrieve pictures list of product
-router.get('/pictures/:id',produitController.getPicture)
 // Retrieve a list of product with categorie
 router.get('/byCatg/:id', produitController.findByCategorie);
 // Retrieve all Featured Poroduct 
@@ -22,6 +20,10 @@ router.put('/:id', produitController.update);
 router.delete('/:id', produitController.delete);
 // Delete a picture whith id 
 router.delete('/picture/:id',produitController.deletePicture);
+// Retrieve pictures list of product
+router.get('/pictures/:id',produitController.getPicture)
+// add Picture to specific product
+router.post('/picture',produitController.addPicture);
 // autentification
 router.post('/login',authentication.login);
 // Get user By Id

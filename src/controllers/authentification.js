@@ -17,11 +17,14 @@ exports.login = function (req, res) {
         } else {
             if (user.length == 0) {
                 console.log('user not found');
-                res.status(401).json({msg:'user not found'});
+                res.status(204).send({msg:'user not exist'});
             } else {
                 // Generate an access token
-                 const accessToken = jwt.sign({ username: user[0].username }, accessTokenSecret, { expiresIn: "1h" });
-                 res.status(200).json({ token: accessToken, expiresIn: 3600, userName:user[0].username });
+                const accessToken = jwt.sign({ username: user[0].username }, accessTokenSecret, { expiresIn: "1h" });
+                let userInfo = {
+                    name: user[0].username
+                };
+                res.status(200).json({ token: accessToken, expiresIn: 3600, userInfo: userInfo });
             }
         }
     })

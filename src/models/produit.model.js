@@ -89,8 +89,6 @@ Produit.findAll = (result) => {
 };
 // display add produit page  (`nom`,`reference`,`categorie`,`prix`,`disponibilite`,`description`
 Produit.update = (id, produit, result) => {
-  console.log(id);
-  console.log(produit);
   dbConn.query("UPDATE produits SET ? WHERE id = ?;", [produit, id], function (err, res) {
     if (err) {
       console.log("error: ", err);
